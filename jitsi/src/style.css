@@ -1,0 +1,7 @@
+.leftwatermark {
+  left: 32px;
+  top: 32px;
+  background-position: center left;
+
+  background-image: url("../public/logo.svg") !important;
+}

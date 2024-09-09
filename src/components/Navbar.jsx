@@ -3,12 +3,12 @@ import Search from "./Search";
 import Logo from "./Logo";
 import Numresults from "./Numresults";
 
-const Navbar = ({}) => {
+const Navbar = ({ movies }) => {
   return (
     <nav className="nav-bar">
       <Logo />
       <Search />
-      <Numresults />
+      <Numresults movies={movies} />
     </nav>
   );
 };

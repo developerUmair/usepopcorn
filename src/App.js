@@ -7,6 +7,7 @@ import Box from "./components/Box";
 import MovieList from "./components/MovieList";
 import WatchedSummary from "./components/WatchedSummary";
 import WatchedMoviesList from "./components/WatchedMoviesList";
+import StarRating from "./components/StarRating";
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -60,24 +61,21 @@ export default function App() {
 
   return (
     <>
-      <Navbar
-        element={
-          <>
-            <Search />
-            <Numresults movies={movies} />
-          </>
-        }
-      />
+      <Navbar>
+        <Search />
+        <Numresults movies={movies} />
+      </Navbar>
       <Main>
-        <Box element={<MovieList movies={movies} />} />
-        <Box
-          element={
-            <>
-              <WatchedSummary watched={watched} />
-              <WatchedMoviesList watched={watched} />
-            </>
-          }
-        />
+        <Box>
+          <MovieList movies={movies} />
+        </Box>
+        <Box>
+          <WatchedSummary watched={watched} />
+          <WatchedMoviesList watched={watched} />
+          <StarRating maxRating={10} />
+          <StarRating maxRating={5} />
+          <StarRating />
+        </Box>
       </Main>
     </>
   );

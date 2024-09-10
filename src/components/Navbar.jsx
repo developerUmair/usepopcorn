@@ -1,10 +1,10 @@
 import Logo from "./Logo";
 
-const Navbar = ({ element }) => {
+const Navbar = ({ children }) => {
   return (
     <nav className="nav-bar">
       <Logo />
-      {element}
+      {children}
     </nav>
   );
 };

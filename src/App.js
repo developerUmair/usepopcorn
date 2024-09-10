@@ -58,21 +58,26 @@ export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
 
-
   return (
     <>
-      <Navbar>
-        <Search />
-        <Numresults movies={movies} />
-      </Navbar>
+      <Navbar
+        element={
+          <>
+            <Search />
+            <Numresults movies={movies} />
+          </>
+        }
+      />
       <Main>
-        <Box>
-          <MovieList movies={movies} />
-        </Box>
-        <Box>
-          <WatchedSummary watched={watched} />
-          <WatchedMoviesList watched={watched} />
-        </Box>
+        <Box element={<MovieList movies={movies} />} />
+        <Box
+          element={
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMoviesList watched={watched} />
+            </>
+          }
+        />
       </Main>
     </>
   );

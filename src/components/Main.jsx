@@ -1,12 +1,8 @@
-import React, { useState } from "react";
-import ListBox from "./ListBox";
-import WatchedBox from "./WatchedBox";
 
-const Main = ({ movies }) => {
+const Main = ({ children }) => {
   return (
     <main className="main">
-      <ListBox movies={movies} />
-      <WatchedBox />
+      {children}
     </main>
   );
 };

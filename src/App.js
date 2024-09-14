@@ -8,6 +8,7 @@ import MovieList from "./components/MovieList";
 import WatchedSummary from "./components/WatchedSummary";
 import WatchedMoviesList from "./components/WatchedMoviesList";
 import StarRating from "./components/StarRating";
+import TextExapnder from "./components/TextExapnder";
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -62,7 +63,7 @@ export default function App() {
 
   return (
     <>
-      <Navbar>
+      {/* <Navbar>
         <Search />
         <Numresults movies={movies} />
       </Navbar>
@@ -81,7 +82,15 @@ export default function App() {
           />
           <h3>Rating for the movie {movieRating}</h3>
         </Box>
-      </Main>
+      </Main> */}
+      <TextExapnder limit={20} expanded={false}>
+        Create a simple game using React.js that allows users to play, track
+        their scores, and save their progress. The game should have the
+        following features Design an interactive game
+        with a simple user interface using React.js (e.g., a basic memory or
+        number guessing game).The game should allow users to play and
+        accumulate scores based on their performance.
+      </TextExapnder>
     </>
   );
 }

@@ -27,7 +27,7 @@ const TextExapnder = ({ limit = 10, children, expanded = false }) => {
     <div>
       <span>{displayText}</span>
       <button onClick={toggleExpand} style={buttonStyle}>
-        {isExpanded ? "Show Less" : "Show More"}
+        {isExpanded ? "Show Less" : "Show More...."}
       </button>
     </div>
   );

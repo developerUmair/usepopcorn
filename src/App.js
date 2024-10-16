@@ -1,6 +1,6 @@
 import Navbar from "./components/Navbar";
 import Main from "./components/Main";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Numresults from "./components/Numresults";
 import Search from "./components/Search";
 import Box from "./components/Box";
@@ -56,14 +56,31 @@ const tempWatchedData = [
   },
 ];
 
+const KEY = "c163b1d7";
+
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
   const [movieRating, setMovieRating] = useState(0);
+
+  const query = "internship";
+
+  useEffect(() => {
+    async function fetchMovies() {
+      const data = await fetch(
+        `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+      );
+      const result = await data.json();
+      setMovies(result.Search);
+      console.log(result.Search);
+    }
+
+    fetchMovies();
+  }, []);
 
   return (
     <>
-      {/* <Navbar>
+      <Navbar>
         <Search />
         <Numresults movies={movies} />
       </Navbar>
@@ -82,15 +99,15 @@ export default function App() {
           />
           <h3>Rating for the movie {movieRating}</h3>
         </Box>
-      </Main> */}
-      <TextExapnder limit={20} expanded={false}>
+      </Main>
+      {/* <TextExapnder limit={20} expanded={false}>
         Create a simple game using React.js that allows users to play, track
         their scores, and save their progress. The game should have the
         following features Design an interactive game
         with a simple user interface using React.js (e.g., a basic memory or
         number guessing game).The game should allow users to play and
         accumulate scores based on their performance.
-      </TextExapnder>
+      </TextExapnder> */}
     </>
   );
 }

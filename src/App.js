@@ -64,15 +64,38 @@ export default function App() {
   const [movieRating, setMovieRating] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState(query);
 
-  const query = "asdfasdfasdf";
+  /*   useEffect(() => {
+    console.log('C')
+  }, [])
+
+  useEffect(() => {
+    console.log('B')
+  })
+  useEffect(() => {
+    console.log('D')
+  }, [query])
+
+
+  console.log('A') */
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 800);
+
+    return () => clearTimeout(handler);
+  }, [query]);
 
   useEffect(() => {
     async function fetchMovies() {
       try {
         setLoading(true);
+        setError("");
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+          `http://www.omdbapi.com/?apikey=${KEY}&s=${debouncedQuery}`
         );
         if (!res.ok)
           throw new Error("Something went wrong with fetching movies.");
@@ -86,13 +109,15 @@ export default function App() {
       }
     }
 
-    fetchMovies();
-  }, []);
+    if (debouncedQuery) {
+      fetchMovies();
+    }
+  }, [debouncedQuery]);
 
   return (
     <>
       <Navbar>
-        <Search />
+        <Search query={query} setQuery={setQuery} />
         <Numresults movies={movies} />
       </Navbar>
       <Main>

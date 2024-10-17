@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import StarRating from "./StarRating";
 import Loader from "./Loader";
 
-const MovieDetails = ({ selectedId, onCloseMovie }) => {
+const MovieDetails = ({ selectedId, onCloseMovie, onAddWatched, watched }) => {
   const [movie, setMovie] = useState({});
   const [loading, setLoading] = useState(false);
+  const [userRating, setUserRating] = useState(0);
 
+  console.log("i am watched", watched);
   const {
     Title: title,
     Year: year,
@@ -19,7 +21,15 @@ const MovieDetails = ({ selectedId, onCloseMovie }) => {
     Genre: genre,
   } = movie;
 
-  console.log(title, year);
+
+  
+  const watchedIMdbIDs = watched.map((movie) => movie.imdbID);
+  const isWatched = watchedIMdbIDs.includes(selectedId);
+  const watchedUserRating = watched.find((movie) => movie.imdbID === selectedId)?.userRating;
+
+  console.log("I am watchedUserRating", watchedUserRating)
+ 
+
   useEffect(() => {
     const fetchMovieDetails = async () => {
       try {
@@ -33,11 +43,27 @@ const MovieDetails = ({ selectedId, onCloseMovie }) => {
         const data = await res.json();
         setMovie(data);
         setLoading(false);
-        console.log(data);
       } catch (error) {}
     };
     fetchMovieDetails();
   }, [selectedId]);
+
+  const handleAdd = () => {
+    const newWatchedMovie = {
+      imdbID: selectedId,
+      title,
+      year,
+      poster,
+      imdbRating: Number(imdbRating),
+      runtime: runtime.split(" ")[0],
+      userRating,
+    };
+
+    if (!isWatched) {
+      onAddWatched(newWatchedMovie);
+    }
+    onCloseMovie();
+  };
 
   return (
     <div className="details">
@@ -64,7 +90,19 @@ const MovieDetails = ({ selectedId, onCloseMovie }) => {
           </header>
           <section>
             <div className="rating">
-              <StarRating maxRating={10} size={26} />
+              {!isWatched ? <>
+                <StarRating
+                maxRating={10}
+                size={26}
+                onSetRating={setUserRating}
+              />
+              {userRating > 0 && (
+                <button className="btn-add" onClick={handleAdd}>
+                  + Add to list
+                </button>
+              )}
+              </> : <p>You already rated {watchedUserRating} 🌟</p>}
+             
             </div>
             <p>
               <em>{plot}</em>

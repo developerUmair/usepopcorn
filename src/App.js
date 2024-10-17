@@ -9,6 +9,7 @@ import WatchedSummary from "./components/WatchedSummary";
 import WatchedMoviesList from "./components/WatchedMoviesList";
 import StarRating from "./components/StarRating";
 import TextExapnder from "./components/TextExapnder";
+import Loader from "./components/Loader";
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -95,7 +96,7 @@ export default function App() {
         setLoading(true);
         setError("");
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${debouncedQuery}`
+          `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_OMDB_API_KEY}&s=${debouncedQuery}`
         );
         if (!res.ok)
           throw new Error("Something went wrong with fetching movies.");
@@ -127,7 +128,7 @@ export default function App() {
           ) : (
             <MovieList movies={movies} />
           )} */}
-          {loading && <div className="loader">Loading...</div>}
+          {loading && <Loader />}
           {!loading && !error && <MovieList movies={movies} />}
           {error && <span className="error">⛔ {error}</span>}
         </Box>

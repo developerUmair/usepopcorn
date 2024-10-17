@@ -10,6 +10,7 @@ import WatchedMoviesList from "./components/WatchedMoviesList";
 import StarRating from "./components/StarRating";
 import TextExapnder from "./components/TextExapnder";
 import Loader from "./components/Loader";
+import MovieDetails from "./components/MovieDetails";
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -67,6 +68,7 @@ export default function App() {
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState(query);
+  const [selectedId, setSelectedId] = useState(null);
 
   /*   useEffect(() => {
     console.log('C')
@@ -81,6 +83,13 @@ export default function App() {
 
 
   console.log('A') */
+
+  const handleSelectMovie = (id) => {
+    setSelectedId((selectedId) => (id === selectedId ? null : id));
+  };
+  const handleCloseMovie = () => {
+    setSelectedId(null);
+  };
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -129,19 +138,28 @@ export default function App() {
             <MovieList movies={movies} />
           )} */}
           {loading && <Loader />}
-          {!loading && !error && <MovieList movies={movies} />}
+          {!loading && !error && (
+            <MovieList movies={movies} onSelectMovie={handleSelectMovie} />
+          )}
           {error && <span className="error">⛔ {error}</span>}
         </Box>
         <Box>
-          <WatchedSummary watched={watched} />
-          <WatchedMoviesList watched={watched} />
-          <StarRating
+          {selectedId ? (
+              <MovieDetails selectedId={selectedId} onCloseMovie={handleCloseMovie} />
+          ) : (
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMoviesList watched={watched} />
+            </>
+          )}
+
+          {/* <StarRating
             maxRating={5}
             messages={["Terrible", "Bad", "Okay", "Good", "Amazing"]}
             // defaultRating={}
             onSetRating={setMovieRating}
           />
-          <h3>Rating for the movie {movieRating}</h3>
+          <h3>Rating for the movie {movieRating}</h3> */}
         </Box>
       </Main>
       {/* <TextExapnder limit={20} expanded={false}>

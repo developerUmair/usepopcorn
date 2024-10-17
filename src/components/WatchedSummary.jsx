@@ -14,7 +14,7 @@ const WatchedSummary = ({ watched }) => {
       <div>
         <p>
           <span>#️⃣</span>
-          <span>{watched.length} movies</span>
+          <span>{watched.length?.toFixed(2)} movies</span>
         </p>
         <p>
           <span>⭐️</span>

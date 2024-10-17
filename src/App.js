@@ -58,7 +58,6 @@ import MovieDetails from "./components/MovieDetails";
 //   },
 // ];
 
-
 export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
@@ -68,7 +67,7 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState(query);
   const [selectedId, setSelectedId] = useState(null);
-
+  
   /*   useEffect(() => {
     console.log('C')
   }, [])
@@ -97,6 +96,8 @@ export default function App() {
 
     return () => clearTimeout(handler);
   }, [query]);
+
+  console.log("I am shit watched", watched);
 
   useEffect(() => {
     async function fetchMovies() {
@@ -130,10 +131,10 @@ export default function App() {
   };
 
   const handleDeleteWatched = (id) => {
-    // setWatched((prevWatched) => prevWatched.filter((movie) => movie.id !== id));
-    console.log('shit id', id)
+    setWatched((prevWatched) =>
+      prevWatched.filter((movie) => movie.imdbID !== id)
+    );
   };
-  
 
   return (
     <>
@@ -165,7 +166,10 @@ export default function App() {
           ) : (
             <>
               <WatchedSummary watched={watched} />
-              <WatchedMoviesList watched={watched} onDeleteWatched={handleDeleteWatched} />
+              <WatchedMoviesList
+                watched={watched}
+                onDeleteWatched={handleDeleteWatched}
+              />
             </>
           )}
 

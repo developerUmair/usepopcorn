@@ -7,7 +7,6 @@ const MovieDetails = ({ selectedId, onCloseMovie, onAddWatched, watched }) => {
   const [loading, setLoading] = useState(false);
   const [userRating, setUserRating] = useState(0);
 
-  console.log("i am watched", watched);
   const {
     Title: title,
     Year: year,
@@ -21,14 +20,11 @@ const MovieDetails = ({ selectedId, onCloseMovie, onAddWatched, watched }) => {
     Genre: genre,
   } = movie;
 
-
-  
   const watchedIMdbIDs = watched.map((movie) => movie.imdbID);
   const isWatched = watchedIMdbIDs.includes(selectedId);
-  const watchedUserRating = watched.find((movie) => movie.imdbID === selectedId)?.userRating;
-
-  console.log("I am watchedUserRating", watchedUserRating)
- 
+  const watchedUserRating = watched.find(
+    (movie) => movie.imdbID === selectedId
+  )?.userRating;
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -65,6 +61,15 @@ const MovieDetails = ({ selectedId, onCloseMovie, onAddWatched, watched }) => {
     onCloseMovie();
   };
 
+  // updating title of the page
+
+  useEffect(() => {
+    document.title = `Movie | ${title}`;
+    return () => {
+      document.title = "usePopcorn";
+    };
+  }, [title]);
+
   return (
     <div className="details">
       {loading ? (
@@ -90,19 +95,22 @@ const MovieDetails = ({ selectedId, onCloseMovie, onAddWatched, watched }) => {
           </header>
           <section>
             <div className="rating">
-              {!isWatched ? <>
-                <StarRating
-                maxRating={10}
-                size={26}
-                onSetRating={setUserRating}
-              />
-              {userRating > 0 && (
-                <button className="btn-add" onClick={handleAdd}>
-                  + Add to list
-                </button>
+              {!isWatched ? (
+                <>
+                  <StarRating
+                    maxRating={10}
+                    size={26}
+                    onSetRating={setUserRating}
+                  />
+                  {userRating > 0 && (
+                    <button className="btn-add" onClick={handleAdd}>
+                      + Add to list
+                    </button>
+                  )}
+                </>
+              ) : (
+                <p>You already rated {watchedUserRating} 🌟</p>
               )}
-              </> : <p>You already rated {watchedUserRating} 🌟</p>}
-             
             </div>
             <p>
               <em>{plot}</em>

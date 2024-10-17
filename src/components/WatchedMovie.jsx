@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const WatchedMovie = ({ movie, onDeleteWatched }) => {
 
-  const handleDelete = movie => onDeleteWatched(movie)
   return (
     <li>
       <img src={movie.poster} alt={`${movie.title} poster`} />
@@ -20,8 +19,14 @@ const WatchedMovie = ({ movie, onDeleteWatched }) => {
           <span>⏳</span>
           <span>{movie.runtime} min</span>
         </p>
+        <button
+        title="Delete Movie"
+          className="btn-delete"
+          onClick={() => onDeleteWatched(movie.imdbID)}
+        >
+          X
+        </button>
       </div>
-      <button onClick={handleDelete(movie.imdbID)}>Delete</button>
     </li>
   );
 };

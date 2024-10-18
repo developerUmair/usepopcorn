@@ -65,9 +65,8 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState(query);
   const [selectedId, setSelectedId] = useState(null);
-  
+
   /*   useEffect(() => {
     console.log('C')
   }, [])
@@ -90,39 +89,43 @@ export default function App() {
   };
 
   useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedQuery(query);
-    }, 800);
-
-    return () => clearTimeout(handler);
-  }, [query]);
-
-  console.log("I am shit watched", watched);
-
-  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal; // Correctly access the signal
+  
     async function fetchMovies() {
       try {
         setLoading(true);
         setError("");
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_OMDB_API_KEY}&s=${debouncedQuery}`
+          `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_OMDB_API_KEY}&s=${query}`,
+          { signal }  // Pass the signal to the fetch request
         );
-        if (!res.ok)
-          throw new Error("Something went wrong with fetching movies.");
+        if (!res.ok) throw new Error("Something went wrong with fetching movies.");
+        
         const data = await res.json();
         if (data.Response === "False") throw new Error("Movie not found.");
-        setMovies(data.Search);
+        
+        setMovies(data.Search);  // Update state with the fetched movies
       } catch (error) {
-        setError(error.message);
+        // Check if the error is due to the abort, otherwise handle the error
+        if (error.name !== "AbortError") {
+          setError(error.message);
+        }
       } finally {
-        setLoading(false);
+        setLoading(false);  // Always stop the loading state
       }
     }
-
-    if (debouncedQuery) {
+  
+    if (query) {
       fetchMovies();
     }
-  }, [debouncedQuery]);
+  
+    // Cleanup function to abort the fetch request if component unmounts or query changes
+    return () => {
+      controller.abort();  // Correctly call the abort method
+    };
+  }, [query]);
+  
 
   // function to add move in watched list
 

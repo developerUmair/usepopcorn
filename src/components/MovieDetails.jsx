@@ -44,6 +44,8 @@ const MovieDetails = ({ selectedId, onCloseMovie, onAddWatched, watched }) => {
     fetchMovieDetails();
   }, [selectedId]);
 
+  // const [avgRating, setAvgRating] = useState(0);
+
   const handleAdd = () => {
     const newWatchedMovie = {
       imdbID: selectedId,
@@ -58,10 +60,32 @@ const MovieDetails = ({ selectedId, onCloseMovie, onAddWatched, watched }) => {
     if (!isWatched) {
       onAddWatched(newWatchedMovie);
     }
+
     onCloseMovie();
+    // setAvgRating(Number(imdbRating));
+    // setAvgRating((avgRating + userRating) /2)
+    // setAvgRating((avgRating) => (avgRating + userRating) / 2);
+    // alert(avgRating)
   };
 
+  /* eslint-disable */
+
+  // if (imdbRating > 8) {
+  //   const [top, setTop] = useState(false);
+  // }
+
+  // if(imdbRating > 8) return <h2>Testing the early return.</h2>
   // updating title of the page
+
+  // const [top, setTop] = useState(imdbRating > 8);
+  // console.log(top)
+
+  // useEffect(() => {
+  //   setTop(imdbRating > 8)
+  // }, [imdbRating])
+
+  const top = imdbRating > 8;
+  console.log(top);
 
   useEffect(() => {
     document.title = `Movie | ${title}`;
@@ -69,6 +93,19 @@ const MovieDetails = ({ selectedId, onCloseMovie, onAddWatched, watched }) => {
       document.title = "usePopcorn";
     };
   }, [title]);
+
+  useEffect(() => {
+    const callback = (e) => {
+      if (e.code === "Escape") {
+        onCloseMovie();
+        console.log("CLOSING!");
+      }
+    };
+    document.addEventListener("keydown", callback);
+    return () => {
+      document.removeEventListener("keydown", callback);
+    };
+  }, []);
 
   return (
     <div className="details">
@@ -93,6 +130,7 @@ const MovieDetails = ({ selectedId, onCloseMovie, onAddWatched, watched }) => {
               </p>
             </div>
           </header>
+          {/* <h2>{avgRating}</h2> */}
           <section>
             <div className="rating">
               {!isWatched ? (

@@ -12,19 +12,17 @@ import TextExapnder from "./components/TextExapnder";
 import Loader from "./components/Loader";
 import MovieDetails from "./components/MovieDetails";
 import CurrencyConvertor from "./components/CurrencyConvertor";
+import { useMovies } from "./hooks/useMovies";
+import { useLocalStorageState } from "./hooks/useLocalStorageState";
 
 export default function App() {
-  const [movies, setMovies] = useState([]);
   // const [watched, setWatched] = useState([]);
-  const [watched, setWatched] = useState(() => {
-    const storedMovies = localStorage.getItem('watched');
-    return JSON.parse(storedMovies)
-  });
+
   const [movieRating, setMovieRating] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [query, setQuery] = useState("");
+  const { movies, loading, error } = useMovies(query);
   const [selectedId, setSelectedId] = useState(null);
+  const [watched, setWatched] = useLocalStorageState([], 'watched')
 
   /*   useEffect(() => {
     console.log('C')
@@ -47,46 +45,6 @@ export default function App() {
     setSelectedId(null);
   };
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal; // Correctly access the signal
-
-    async function fetchMovies() {
-      try {
-        setLoading(true);
-        setError("");
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_OMDB_API_KEY}&s=${query}`,
-          { signal } // Pass the signal to the fetch request
-        );
-        if (!res.ok)
-          throw new Error("Something went wrong with fetching movies.");
-
-        const data = await res.json();
-        if (data.Response === "False") throw new Error("Movie not found.");
-
-        setMovies(data.Search); // Update state with the fetched movies
-      } catch (error) {
-        // Check if the error is due to the abort, otherwise handle the error
-        if (error.name !== "AbortError") {
-          setError(error.message);
-        }
-      } finally {
-        setLoading(false); // Always stop the loading state
-      }
-    }
-
-    if (query) {
-      handleCloseMovie();
-      fetchMovies();
-    }
-
-    // Cleanup function to abort the fetch request if component unmounts or query changes
-    return () => {
-      controller.abort(); // Correctly call the abort method
-    };
-  }, [query]);
-
   // function to add move in watched list
 
   const handleAddWatched = (movie) => {
@@ -95,10 +53,7 @@ export default function App() {
     // localStorage.setItem("watched", JSON.stringify([...watched, movie]));
   };
 
-  useEffect(() => {
-    localStorage.setItem("watched", JSON.stringify(watched));
-  }, [watched])
-
+ 
   const handleDeleteWatched = (id) => {
     setWatched((prevWatched) =>
       prevWatched.filter((movie) => movie.imdbID !== id)
